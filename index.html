@@ -40,6 +40,7 @@
             background-color: #45a049;
         }
     </style>
+    <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
     <div class="note-container">
@@ -47,6 +48,8 @@
         <input id="title" type="text" placeholder="請輸入標題..." style="width:100%;font-size:18px;padding:8px;margin-bottom:12px;border:1px solid #ddd;border-radius:4px;" />
         <textarea id="note" placeholder="在這裡輸入你的筆記..."></textarea>
         <button class="button" onclick="saveNote()">儲存筆記</button>
+        <button class="button" id="login-btn" onclick="handleAuthClick()" style="background-color:#4285F4;margin-left:10px;">登入 Google</button>
+        <button class="button" id="gdrive-btn" onclick="saveToDrive()" style="background-color:#34A853;margin-left:10px;">儲存到 Google Drive</button>
         <div style="margin-top:20px;">
             <label for="file-upload" style="font-weight:bold;">檔案上傳：</label>
             <input type="file" id="file-upload" />
@@ -55,6 +58,61 @@
     </div>
 
     <script>
+        const CLIENT_ID = '606833295829-q56558b1jt02dnl7k8kbe3pvo477ib79.apps.googleusercontent.com';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+        function handleClientLoad() {
+            gapi.load('client:auth2', initClient);
+        }
+
+        function initClient() {
+            gapi.client.init({
+                clientId: CLIENT_ID,
+                scope: SCOPES
+            }).then(() => {
+                // 登入狀態變化時顯示/隱藏按鈕
+                updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+                gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+            });
+        }
+
+        function handleAuthClick() {
+            gapi.auth2.getAuthInstance().signIn();
+        }
+
+        function handleSignoutClick() {
+            gapi.auth2.getAuthInstance().signOut();
+        }
+
+        function updateSigninStatus(isSignedIn) {
+            document.getElementById('login-btn').style.display = isSignedIn ? 'none' : '';
+            document.getElementById('gdrive-btn').style.display = isSignedIn ? '' : 'none';
+        }
+
+        // 儲存到 Google Drive
+        function saveToDrive() {
+            const title = document.getElementById('title').value || '未命名筆記';
+            const note = document.getElementById('note').value;
+            const content = `標題：${title}\n\n內容：\n${note}`;
+            const file = new Blob([content], { type: 'text/plain' });
+            const metadata = {
+                name: title + '.txt',
+                mimeType: 'text/plain'
+            };
+            var accessToken = gapi.auth.getToken().access_token;
+            var form = new FormData();
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+            form.append('file', file);
+            fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+                method: 'POST',
+                headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+                body: form,
+            }).then((res) => res.json())
+              .then(function(val) {
+                alert('已儲存到 Google Drive！');
+              });
+        }
+
         // 從 localStorage 載入筆記
         window.onload = function() {
             const savedTitle = localStorage.getItem('note-title');
@@ -70,6 +128,7 @@
                 const file = e.target.files[0];
                 document.getElementById('file-name').textContent = file ? file.name : '';
             });
+            if (typeof gapi !== 'undefined') handleClientLoad();
         }
 
         // 儲存標題與筆記到 localStorage
