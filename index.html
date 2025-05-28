@@ -45,16 +45,18 @@
 <body>
     <div class="note-container">
         <h1>我的筆記本</h1>
+        <div id="login-status" style="margin-bottom:10px;color:#4285F4;font-weight:bold;"></div>
         <input id="title" type="text" placeholder="請輸入標題..." style="width:100%;font-size:18px;padding:8px;margin-bottom:12px;border:1px solid #ddd;border-radius:4px;" />
         <textarea id="note" placeholder="在這裡輸入你的筆記..."></textarea>
         <button class="button" onclick="saveNote()">儲存筆記</button>
         <button class="button" id="login-btn" onclick="handleAuthClick()" style="background-color:#4285F4;margin-left:10px;">登入 Google</button>
-        <button class="button" id="gdrive-btn" onclick="saveToDrive()" style="background-color:#34A853;margin-left:10px;">儲存到 Google Drive</button>
+        <button class="button" id="gdrive-btn" onclick="saveToDrive()" style="background-color:#34A853;margin-left:10px;display:none;">儲存到 Google Drive</button>
         <div style="margin-top:20px;">
             <label for="file-upload" style="font-weight:bold;">檔案上傳：</label>
             <input type="file" id="file-upload" />
             <span id="file-name" style="margin-left:10px;color:#555;"></span>
         </div>
+        <div id="gdrive-msg" style="margin-top:10px;color:#34A853;font-weight:bold;"></div>
     </div>
 
     <script>
@@ -85,8 +87,17 @@
         }
 
         function updateSigninStatus(isSignedIn) {
-            document.getElementById('login-btn').style.display = isSignedIn ? 'none' : '';
-            document.getElementById('gdrive-btn').style.display = isSignedIn ? '' : 'none';
+            const loginStatus = document.getElementById('login-status');
+            const gdriveBtn = document.getElementById('gdrive-btn');
+            if (isSignedIn) {
+                const user = gapi.auth2.getAuthInstance().currentUser.get();
+                const profile = user.getBasicProfile();
+                loginStatus.textContent = '已登入：' + profile.getEmail();
+                gdriveBtn.style.display = '';
+            } else {
+                loginStatus.textContent = '尚未登入 Google';
+                gdriveBtn.style.display = 'none';
+            }
         }
 
         // 儲存到 Google Drive
@@ -103,13 +114,22 @@
             var form = new FormData();
             form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
             form.append('file', file);
+            const msg = document.getElementById('gdrive-msg');
+            msg.textContent = '正在儲存到 Google Drive...';
             fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
                 method: 'POST',
                 headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
                 body: form,
             }).then((res) => res.json())
               .then(function(val) {
-                alert('已儲存到 Google Drive！');
+                if(val.id){
+                  msg.textContent = '已成功儲存到 Google Drive！';
+                }else{
+                  msg.textContent = '儲存失敗，請重試。';
+                }
+              })
+              .catch(function(err){
+                msg.textContent = '儲存失敗：' + err;
               });
         }
 
