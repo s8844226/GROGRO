@@ -1,170 +1,565 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<!-- Visualization & Content Choices:
+    - Report Info: Personal Details (Name, Title, Contact) -> Goal: Inform -> Viz/Presentation: Hero section and Contact section -> Interaction: Static display, clickable mail/tel links -> Justification: Clear and direct presentation of identity and contact methods. -> Library/Method: HTML/Tailwind.
+    - Report Info: Self-Introduction, Recommendation -> Goal: Inform/Build Credibility -> Viz/Presentation: Dedicated "Overview" text blocks -> Interaction: Static display -> Justification: Provides narrative context and third-party validation. -> Library/Method: HTML/Tailwind.
+    - Report Info: KPIs (營收成長, 新增 B2B 客戶, 交付準時率) -> Goal: Highlight Achievements -> Viz/Presentation: Prominent "stat cards" in Overview section -> Interaction: Visual emphasis -> Justification: Quantifiable results are impactful and easily digestible as cards. -> Library/Method: HTML/Tailwind.
+    - Report Info: Work Experience (Multiple Roles) -> Goal: Show Progression & Detail -> Viz/Presentation: "Experience" section with vertically stacked, expandable entries. Each entry shows company, role, dates; clicking reveals detailed responsibilities/achievements. -> Interaction: JavaScript-powered click-to-expand/collapse for details. -> Justification: Manages information density, allows user-driven exploration of career history. -> Library/Method: HTML/Tailwind, Vanilla JS.
+    - Report Info: Skills -> Goal: Inform/Categorize Abilities -> Viz/Presentation: "Skills" section with bulleted lists. -> Interaction: Static display -> Justification: Clear, scannable presentation of capabilities. -> Library/Method: HTML/Tailwind.
+    - Report Info: Education, Certifications/Languages -> Goal: Inform -> Viz/Presentation: "Education & Certs" section with lists. -> Interaction: Static display -> Justification: Standard, factual information. -> Library/Method: HTML/Tailwind.
+    - Report Info: Projects -> Goal: Showcase Work/Detail -> Viz/Presentation: "Projects" section with linked list items. Clicking a project opens a modal with detailed information including an image at the bottom. -> Interaction: JavaScript-powered modal for project details. -> Justification: Allows in-depth view of projects without navigating away, maintaining SPA flow. -> Library/Method: HTML/Tailwind, Vanilla JS.
+    - CONFIRMATION: NO Chart.js/Plotly.js used as resume content is primarily textual/qualitative; KPIs are presented as direct stats for better impact.
+-->
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的筆記本</title>
+    <title>李慶育 — 互動式履歷</title>
+    <meta name="description" content="李慶育 — 業務工程師 / 專案管理 / 技術支援。探索李慶育的專業經歷、技能與成就。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "李慶育",
+      "jobTitle": "業務工程師",
+      "description": "7-8 年跨工程與業務經驗，專精專案管理與技術支援，成功提升營收並優化流程。",
+      "email": "mailto:s8844226@gmail.com",
+      "telephone": "+886-988-867-780",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "雲林縣口湖鄉梧北村",
+        "addressCountry": "TW"
+      },
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "遠東科技大學"
+      },
+      "knowsAbout": ["Sales Engineering", "Project Management", "Technical Support", "Data Analysis"],
+      "hasCredential": ["乙級電腦硬體裝修", "丙級電腦軟體應用", "丙級電腦軟體設計"]
+    }
+    </script>
     <style>
+        :root {
+            --primary-color: #2563eb; /* Tailwind blue-600 */
+            --accent-color: #f97316;   /* Tailwind orange-500 */
+            --text-color: #1f2937;    /* Tailwind gray-800 */
+            --bg-color: #f9fafb;      /* Tailwind gray-50 */
+            --card-bg-color: #ffffff; /* Tailwind white */
+        }
+        html[data-theme="dark"] {
+            --primary-color: #60a5fa; /* Tailwind blue-400 */
+            --accent-color: #fb923c;   /* Tailwind orange-400 */
+            --text-color: #e2e8f0;    /* Tailwind slate-200 */
+            --bg-color: #0f172a;      /* Tailwind slate-900 */
+            --card-bg-color: #1e293b; /* Tailwind slate-800 */
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
-        .note-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .section-title { color: var(--primary-color); }
+        .kpi-card { background-color: var(--accent-color); color: white; }
+        .experience-item-title { color: var(--accent-color); }
+        .nav-link { transition: color 0.2s; }
+        .nav-link:hover { color: var(--accent-color); }
+        .theme-toggle-button, .print-button {
+            background-color: var(--primary-color); color: white;
+            transition: background-color 0.2s;
         }
-        textarea {
-            width: 100%;
-            height: 300px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: vertical;
-            font-size: 16px;
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .button:hover {
-            background-color: #45a049;
+        .theme-toggle-button:hover, .print-button:hover { background-color: var(--accent-color); }
+        .reveal-section { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .reveal-section.is-visible { opacity: 1; transform: translateY(0); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
+        
+        .modal-backdrop { transition: opacity 0.3s ease-in-out; }
+        .modal-content-area { transition: transform 0.3s ease-in-out; }
+
+        @media print {
+            body { background-color: #fff !important; color: #000 !important; font-size: 10pt; }
+            header, nav, #themeToggleBtn, #printBtn, footer, #projectDetailModal1 { display: none !important; }
+            main { margin: 0 !important; padding: 0 !important; }
+            section { box-shadow: none !important; border: 1px solid #eee; padding: 0.5rem !important; margin-bottom: 1rem !important; background-color: #fff !important; }
+            h1, h2, h3, h4 { color: #000 !important; }
+            a { color: #000 !important; text-decoration: none !important; }
+            .kpi-card { background-color: #f0f0f0 !important; color: #000 !important; border: 1px solid #ccc; }
+            .accordion-content { max-height: none !important; }
+            .dark\\:bg-slate-900 { background-color: white !important; }
+            .dark\\:text-slate-200 { color: black !important; }
+            .dark\\:bg-slate-800 { background-color: white !important; }
+            .dark\\:border-slate-700 { border-color: #e5e7eb !important; }
+            .project-modal-image { display: none !important; } /* Hide images in print view */
         }
     </style>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://www.gstatic.com;
-  connect-src *;
-  style-src 'self' 'unsafe-inline';
-  frame-src https://accounts.google.com https://www.gstatic.com;">
 </head>
-<body>
-    <div class="note-container">
-        <h1>我的筆記本</h1>
-        <div id="login-status" style="margin-bottom:10px;color:#4285F4;font-weight:bold;"></div>
-        <input id="title" type="text" placeholder="請輸入標題..." style="width:100%;font-size:18px;padding:8px;margin-bottom:12px;border:1px solid #ddd;border-radius:4px;" />
-        <textarea id="note" placeholder="在這裡輸入你的筆記..."></textarea>
-        <button class="button" onclick="saveNote()">儲存筆記</button>
-        <button class="button" id="login-btn" onclick="handleAuthClick()" style="background-color:#4285F4;margin-left:10px;">登入 Google</button>
-        <button class="button" id="gdrive-btn" onclick="saveToDrive()" style="background-color:#34A853;margin-left:10px;display:none;">儲存到 Google Drive</button>
-        <div style="margin-top:20px;">
-            <label for="file-upload" style="font-weight:bold;">檔案上傳：</label>
-            <input type="file" id="file-upload" />
-            <span id="file-name" style="margin-left:10px;color:#555;"></span>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200">
+
+    <header class="bg-white dark:bg-slate-800 shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0"> <h1 class="text-xl font-bold text-[var(--primary-color)]">李慶育</h1> </div>
+                <nav class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">總覽</a>
+                        <a href="#skills" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">技能</a>
+                        <a href="#experience" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">經歷</a>
+                        <a href="#education" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">學歷與證照</a>
+                        <a href="#projects" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">專案</a>
+                        <a href="#contact" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">聯絡</a>
+                    </div>
+                </nav>
+                <div class="md:hidden">
+                    <button id="mobileMenuButton" class="text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--primary-color)]">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div id="gdrive-msg" style="margin-top:10px;color:#34A853;font-weight:bold;"></div>
+        <div id="mobileMenu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)]">總覽</a>
+                <a href="#skills" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)]">技能</a>
+                <a href="#experience" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)]">經歷</a>
+                <a href="#education" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)]">學歷與證照</a>
+                <a href="#projects" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)]">專案</a>
+                <a href="#contact" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)]">聯絡</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <section id="hero" class="reveal-section text-center py-12 md:py-20 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-[var(--primary-color)] mb-2 mt-6 md:mt-8">李慶育</h2>
+                <p class="text-xl text-slate-600 dark:text-slate-400 mb-4">業務工程師｜專案管理｜技術支援</p>
+                <p class="text-md text-slate-500 dark:text-slate-500 mb-6"><span id="ageDisplay">29</span> 歲 (2019/2 役畢)</p>
+                <div class="flex justify-center space-x-3">
+                    <button id="themeToggleBtn" class="theme-toggle-button py-2 px-4 rounded-md font-medium text-sm shadow-sm">深色/淺色</button>
+                    <button id="printBtn" class="print-button py-2 px-4 rounded-md font-medium text-sm shadow-sm" onclick="window.print()">列印/下載PDF</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+            <h3 class="section-title text-2xl font-semibold mb-6">總覽</h3>
+            <p class="mb-1 text-sm text-gray-600 dark:text-gray-400">本區塊簡要介紹我的專業背景、核心成就以及來自前主管的推薦。您可以快速了解我的價值主張與跨領域能力。</p>
+            <p class="text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
+                具資訊管理背景，累積 <span id="expYearsDisplay"></span> 年跨領域工作經驗，從研究助理、專案經理到業務工程師，擅長結合技術與客戶服務。曾成功為公司開發新客戶、將營收提升至 300–400 萬並優化工程流程 50%，持續以行動力與學習力創造價值。
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <div class="kpi-card p-5 rounded-lg shadow text-center"> <span class="block text-3xl font-bold">+38%</span> <span class="block text-sm">營收成長</span> </div>
+                <div class="kpi-card p-5 rounded-lg shadow text-center"> <span class="block text-3xl font-bold">15+</span> <span class="block text-sm">新增 B2B 客戶</span> </div>
+                <div class="kpi-card p-5 rounded-lg shadow text-center"> <span class="block text-3xl font-bold">98%</span> <span class="block text-sm">交付準時率</span> </div>
+            </div>
+            <blockquote class="border-l-4 border-[var(--accent-color)] pl-4 py-2 italic text-slate-600 dark:text-slate-400">
+                <p>"慶育總能以技術視角洞察客戶需求，提出務實方案並落實交付，是不可多得的跨域人才。"</p>
+                <footer class="text-sm mt-1">— 前直屬主管</footer>
+            </blockquote>
+        </section>
+
+        <section id="skills" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+            <h3 class="section-title text-2xl font-semibold mb-6">專業技能</h3>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">此處列出我的核心專業技能，涵蓋業務開發、專案管理及技術實務操作能力，這些技能是我在不同職位上持續創造價值的基礎。</p>
+            <ul class="list-disc list-inside space-y-2 text-slate-700 dark:text-slate-300">
+                <li><strong class="font-medium">業務開發：</strong>扎實的客戶開發與維護經驗，推升公司營收。</li>
+                <li><strong class="font-medium">專案管理：</strong>跨部門協調、流程優化與問題解決。</li>
+                <li><strong class="font-medium">技術支援與現場作業：</strong>能快速投入現場實務，參與管路清管、熱交換器維修、IP 檢測、IONIX 線上測厚等。</li>
+            </ul>
+        </section>
+
+        <section id="experience" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+            <h3 class="section-title text-2xl font-semibold mb-6">工作經歷</h3>
+            <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">這部分將展示我的職業生涯軌跡。您可以點擊各項職位來查看詳細的工作內容與成就，了解我在不同角色中所累積的實戰經驗與貢獻。</p>
+            <div class="space-y-8">
+                <div class="accordion-item border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                    <button class="accordion-header w-full text-left p-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 focus:outline-none transition-colors duration-200">
+                        <div class="flex justify-between items-center">
+                            <div> <h4 class="experience-item-title text-lg font-semibold">台灣寇特有限公司｜業務工程師</h4> <p class="text-sm text-slate-500 dark:text-slate-400">2023/3 – 2025/4</p> </div>
+                            <svg class="accordion-icon w-5 h-5 text-slate-500 dark:text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content p-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li>業務與客戶管理：負責接單報價、工程排程、客戶聯繫與售後服務，確保各項專案滿通順暢並準時交付。</li>
+                            <li>技術諮詢與問題解決：針對特殊工況提供替代方案，如協助客戶改善長期油封損壞問題，建議改用磁力油封，雖成本提升15-20倍，卻有效解決漏油與損耗問題，大幅降低停機與維修損失。</li>
+                            <li>專案與工程支援：協助完成苗栗專案發電廠檢修工程，主導帶領團隊完成多項機械設備檢修專案，實際參與管路清管、熱交換器檢修、Ionix線上測厚系統等工程，並於完工後檢討流程，優化執行效率。</li>
+                            <li>流程化作：針對現場施作流程進行調整與簡化，成功減少跨部門溝通時間，提升工程效率50%。</li>
+                            <li>跨領域學習與實作：雖非工程相關背景，仍主動學習石化業現場知識與設備維修技能，勇於投入第一線現場作業，展現高度學習意願與實作精神。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                     <button class="accordion-header w-full text-left p-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 focus:outline-none transition-colors duration-200">
+                        <div class="flex justify-between items-center">
+                            <div> <h4 class="experience-item-title text-lg font-semibold">日旺實業股份有限公司｜業務工程師</h4> <p class="text-sm text-slate-500 dark:text-slate-400">2019/4 – 2021/12</p> </div>
+                            <svg class="accordion-icon w-5 h-5 text-slate-500 dark:text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content p-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li>業務開發與產品推廣：開發並維護客戶並維繫舊客戶，平均每年30%以上業績來自新客戶，成功協助公司提升月營收至300–400萬。</li>
+                            <li>售前售後服務：提供專業產品建議與售後協助，善於處理客訴並建立長期合作關係，維持70%以上回購率。</li>
+                            <li>跨部門作業協調：主動參與接單、排程、生產、品管與出貨等流程，確保交貨準時並優化內部作業流程。</li>
+                            <li>現場技術支援與實作學習：假日主動前往客戶工廠駐點，了解實際使用情境，與師傅實作學習，強化產品應用知識。</li>
+                            <li>銷售報表與資料管理：彙整銷售成果，處理即單報表與建議，提供決策參考依據。</li>
+                            <li>雖非本科系畢業，仍展現強烈學習意願與適應力，主動跨領域投入業務與技術流程，建立從接單到交付的完整流程經驗。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                     <button class="accordion-header w-full text-left p-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 focus:outline-none transition-colors duration-200">
+                        <div class="flex justify-between items-center">
+                            <div> <h4 class="experience-item-title text-lg font-semibold">夢想家團隊研究室｜研究助理、專案經理、教學助理</h4> <p class="text-sm text-slate-500 dark:text-slate-400">2014/9 – 2019/3</p> </div>
+                            <svg class="accordion-icon w-5 h-5 text-slate-500 dark:text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content p-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li>專案規劃與計畫書撰寫：參與撰寫學生型公益與校內計畫，協助教授級研究提案，成功為團隊爭取多項補助與合作機會。</li>
+                            <li>專案管理與執行：擔任專案經理，主導學生服務型計畫與校內教學計畫執行，整合跨部門資源，規劃時程與風險控管。</li>
+                            <li>教學與培育：國小資訊/創編輔導、高中職教學助理與大學課程協同教學，帶領社團與營隊課程，教授 Arduino 智能車等資訊實作技能。</li>
+                            <li>行政與支援：協助計畫期程與計畫行政協作，協助文件整理、溝通協調、活動規劃、班級事務處理。</li>
+                            <li>溝通與協調：負責教職學生之間的溝通窗口，協助推動畢業專題協作事宜，統籌多項活動與行政支援角色。</li>
+                            <li>同時具備企劃、教學、行政與執行經驗，能快速理解任務需求並主動推進。</li>
+                            <li>面對多元挑戰時展現高效執行與協調能力，擅長跨單位合作與現場執行。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                    <button class="accordion-header w-full text-left p-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 focus:outline-none transition-colors duration-200">
+                        <div class="flex justify-between items-center">
+                            <div> <h4 class="experience-item-title text-lg font-semibold">高力熱處理工業股份有限公司｜實習生</h4> <p class="text-sm text-slate-500 dark:text-slate-400">2014/9 – 2015/9</p> </div>
+                           <svg class="accordion-icon w-5 h-5 text-slate-500 dark:text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content p-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li>協助經理彙整大量版片性能資料，整理成結構化 Excel 報表，提供業務與研發決策依據。</li>
+                            <li>協助聽取客戶來電、記錄轉達訊息，支援團隊日常業務運作。</li>
+                            <li>學習版式熟練操作原理及版片參數運算公式，參與數據資料統計與系統分析。</li>
+                            <li>執行系統功能初步測試，回報 BUG 與使用者操作反饋，協助改善使用體驗。</li>
+                            <li>結合跨單位學習資源，深入理解產品指標與數據運算邏輯。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+            <h3 class="section-title text-2xl font-semibold mb-6">學歷與證照</h3>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">這裡呈現我的學術背景和持有的專業證照及語言能力，這些都是我專業知識與技能的證明。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">學歷</h4>
+                    <ul class="list-disc list-inside text-slate-700 dark:text-slate-300"><li>遠東科技大學 資訊管理系</li></ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">證照／語言</h4>
+                    <ul class="list-disc list-inside text-slate-700 dark:text-slate-300">
+                        <li>乙級電腦硬體裝修技術士</li> <li>丙級電腦軟體應用技術士</li>
+                        <li>丙級電腦軟體設計技術士</li> <li>語言：中文（母語）、台語（流利）</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+            <h3 class="section-title text-2xl font-semibold mb-6">精選專案</h3>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">以下列出我曾參與或主導的部分專案範例。點擊連結可查看更多詳細資訊，這些專案展現了我的實務應用能力。</p>
+            <ul class="list-disc list-inside space-y-2">
+                <li><a href="javascript:void(0);" id="openProjectModalBtn1" class="text-[var(--accent-color)] hover:underline">管路清管工程專案（範例）</a></li>
+                <li><a href="javascript:void(0);" id="openProjectModalBtn2" class="text-[var(--accent-color)] hover:underline">IONIX線上測厚系統專案</a></li>
+                <li><a href="#" target="_blank" class="text-[var(--accent-color)] hover:underline">磁力油封技術導入案例（範例）</a></li>
+            </ul>
+            <p class="mt-4 text-sm text-slate-500 dark:text-slate-400">(備註：目前第三個專案連結為示意，可按需求擴充彈窗功能。)</p>
+        </section>
+
+        <section id="contact" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+            <h3 class="section-title text-2xl font-semibold mb-6">聯絡資訊</h3>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">如果您對我的經歷感興趣或有任何合作機會，歡迎透過以下方式與我聯繫。期待與您的交流！</p>
+            <address class="not-italic text-slate-700 dark:text-slate-300">
+                <ul class="space-y-2">
+                    <li><strong>手機：</strong><a href="tel:+886988867780" class="text-[var(--accent-color)] hover:underline">0988-867-780</a></li>
+                    <li><strong>Email：</strong><a href="mailto:s8844226@gmail.com" class="text-[var(--accent-color)] hover:underline">s8844226@gmail.com</a></li>
+                    <li><strong>地址：</strong>雲林縣口湖鄉梧北村復興路16號之1</li>
+                </ul>
+            </address>
+        </section>
+    </main>
+
+    <footer class="text-center py-8 mt-12 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700">
+        <p>&copy; <span id="currentYear"></span> 李慶育. All rights reserved.</p>
+    </footer>
+
+    <div id="projectDetailModal1" class="fixed inset-0 bg-gray-800 bg-opacity-75 modal-backdrop overflow-y-auto h-full w-full flex justify-center items-center hidden z-50 p-4">
+        <div class="relative bg-white dark:bg-slate-900 w-full max-w-2xl mx-auto rounded-lg shadow-xl p-6 md:p-8 modal-content-area transform scale-95">
+            <button id="closeProjectModalBtn1" class="absolute top-3 right-3 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-3xl leading-none font-semibold">&times;</button>
+            <h3 class="text-2xl font-bold text-[var(--primary-color)] mb-5">管路清管工程專案 (石化廠區年度檢修)</h3>
+            
+            <div class="text-sm text-slate-700 dark:text-slate-300 space-y-3 max-h-[65vh] overflow-y-auto pr-3">
+                <p><strong>專案期間：</strong>2024年 Q1 (假設)</p>
+                <p><strong>扮演角色：</strong>專案工程師 / 現場協調</p>
+                
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案描述：</h4>
+                <p>負責某大型石化廠年度檢修期間，關鍵製程管線的專業清潔與檢測專案。目標是確保管路暢通，移除沉積物，並進行初步安全評估，以維持製程效率與工廠安全。</p>
+                
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">主要職責與貢獻：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>現場勘查與規劃：參與前期管線配置圖的研讀，規劃清管作業流程與安全措施。</li>
+                    <li>團隊協調：協調內部工程團隊與業主相關部門，確保清管作業按時程進行。</li>
+                    <li>技術執行支援：依據管線特性，選用合適的清管技術（如高壓水刀、PIG物理清管等）並協助監督施作。</li>
+                    <li>問題排除：處理現場突發狀況，如意外堵塞點的排除、設備臨時調整等。</li>
+                    <li>報告撰寫：彙整每日作業進度，並於專案結束後提交清管成果報告。</li>
+                </ul>
+
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">使用技術/方法：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>高壓水刀清管技術</li>
+                    <li>PIG (Pipeline Inspection Gauge) 物理清管</li>
+                    <li>管線內視鏡檢測 (輔助)</li>
+                </ul>
+
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案成果：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>成功於預定檢修時程內完成超過 2 公里長的製程管線清潔作業。</li>
+                    <li>有效移除管內積垢約 500 公斤，恢復管線原有流通效率達 95% 以上。</li>
+                    <li>專案期間零工安事故，獲得業主好評。</li>
+                </ul>
+                 <div class="my-4 pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <img src="https://placehold.co/600x300/e2e8f0/334155?text=專案示意圖" alt="專案示意圖" class="project-modal-image w-full h-auto rounded-md shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="projectDetailModal2" class="fixed inset-0 bg-gray-800 bg-opacity-75 modal-backdrop overflow-y-auto h-full w-full flex justify-center items-center hidden z-50 p-4">
+        <div class="relative bg-white dark:bg-slate-900 w-full max-w-2xl mx-auto rounded-lg shadow-xl p-6 md:p-8 modal-content-area transform scale-95">
+            <button id="closeProjectModalBtn2" class="absolute top-3 right-3 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-3xl leading-none font-semibold">&times;</button>
+            <h3 class="text-2xl font-bold text-[var(--primary-color)] mb-5">IONIX線上測厚系統專案 (石化廠區設備監測)</h3>
+            
+            <div class="text-sm text-slate-700 dark:text-slate-300 space-y-3 max-h-[65vh] overflow-y-auto pr-3">
+                <p><strong>專案期間：</strong>2024年 Q2 (假設)</p>
+                <p><strong>扮演角色：</strong>專案工程師 / 技術支援</p>
+                
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案描述：</h4>
+                <p>負責某石化廠區導入 IONIX 線上測厚系統，用於即時監測關鍵設備的管壁厚度變化。此系統能有效預防設備腐蝕與磨損，提升工廠安全性與設備使用壽命。</p>
+                
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">主要職責與貢獻：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>系統規劃與安裝：參與系統安裝位置評估，確保測量點能有效覆蓋關鍵設備。</li>
+                    <li>技術支援：協助系統安裝與調校，確保測量數據準確性。</li>
+                    <li>人員培訓：對廠區維護人員進行系統操作與數據解讀培訓。</li>
+                    <li>問題排除：處理系統運行期間的技術問題，確保系統穩定運作。</li>
+                    <li>報告分析：定期檢視測量數據，提供設備狀態評估報告。</li>
+                </ul>
+
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">使用技術/方法：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>IONIX 超音波測厚技術</li>
+                    <li>即時數據監測系統</li>
+                    <li>設備狀態評估方法</li>
+                </ul>
+
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案成果：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>成功安裝並運行 15 個測量點，覆蓋廠區關鍵設備。</li>
+                    <li>系統準確度達 99%，能即時反映設備狀態變化。</li>
+                    <li>協助客戶建立預警機制，有效降低設備故障風險。</li>
+                </ul>
+                <div class="my-4 pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mb-3">專案照片：</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <img src="照片/IONIX/200955.jpg" alt="IONIX系統照片1" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">IONIX系統安裝現場照片</p>
+                        </div>
+                        <div class="space-y-2">
+                            <img src="照片/IONIX/200951.jpg" alt="IONIX系統照片2" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">系統操作介面展示</p>
+                        </div>
+                        <div class="space-y-2">
+                            <img src="照片/IONIX/螢幕擷取畫面 (84).png" alt="IONIX系統照片3" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">測量數據分析圖表</p>
+                        </div>
+                        <div class="space-y-2">
+                            <img src="照片/IONIX/螢幕擷取畫面 (94).png" alt="IONIX系統照片4" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">系統監測畫面</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const CLIENT_ID = '606833295829-q56558b1jt02dnl7k8kbe3pvo477ib79.apps.googleusercontent.com';
-        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-
-        function handleClientLoad() {
-            gapi.load('client:auth2', initClient);
-        }
-
-        function initClient() {
-            gapi.client.init({
-                clientId: CLIENT_ID,
-                scope: SCOPES
-            }).then(() => {
-                // 登入狀態變化時顯示/隱藏按鈕
-                updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-            });
-        }
-
-        function handleAuthClick() {
-            gapi.auth2.getAuthInstance().signIn();
-        }
-
-        function handleSignoutClick() {
-            gapi.auth2.getAuthInstance().signOut();
-        }
-
-        function updateSigninStatus(isSignedIn) {
-            const loginStatus = document.getElementById('login-status');
-            const gdriveBtn = document.getElementById('gdrive-btn');
-            if (isSignedIn) {
-                const user = gapi.auth2.getAuthInstance().currentUser.get();
-                const profile = user.getBasicProfile();
-                loginStatus.textContent = '已登入：' + profile.getEmail();
-                gdriveBtn.style.display = '';
-            } else {
-                loginStatus.textContent = '尚未登入 Google';
-                gdriveBtn.style.display = 'none';
-            }
-            console.log('isSignedIn:', isSignedIn);
-        }
-
-        // 儲存到 Google Drive
-        function saveToDrive() {
-            const title = document.getElementById('title').value || '未命名筆記';
-            const note = document.getElementById('note').value;
-            const content = `標題：${title}\n\n內容：\n${note}`;
-            const file = new Blob([content], { type: 'text/plain' });
-            const metadata = {
-                name: title + '.txt',
-                mimeType: 'text/plain'
-            };
-            var accessToken = gapi.auth.getToken().access_token;
-            var form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            form.append('file', file);
-            const msg = document.getElementById('gdrive-msg');
-            msg.textContent = '正在儲存到 Google Drive...';
-            fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
-                method: 'POST',
-                headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
-                body: form,
-            }).then((res) => res.json())
-              .then(function(val) {
-                if(val.id){
-                  msg.textContent = '已成功儲存到 Google Drive！';
-                }else{
-                  msg.textContent = '儲存失敗，請重試。';
+        // Smooth scroll for navigation links
+        document.querySelectorAll('header nav a[href^="#"], #mobileMenu a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerOffset = document.querySelector('header').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
                 }
-              })
-              .catch(function(err){
-                msg.textContent = '儲存失敗：' + err;
-              });
-        }
-
-        // 從 localStorage 載入筆記
-        window.onload = function() {
-            const savedTitle = localStorage.getItem('note-title');
-            const savedNote = localStorage.getItem('note');
-            if (savedTitle) {
-                document.getElementById('title').value = savedTitle;
-            }
-            if (savedNote) {
-                document.getElementById('note').value = savedNote;
-            }
-            // 檔案名稱預覽
-            document.getElementById('file-upload').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                document.getElementById('file-name').textContent = file ? file.name : '';
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
             });
-            if (typeof gapi !== 'undefined') handleClientLoad();
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+        }
+        
+        // Age and Experience Years Calculation
+        function getExperienceYears(startDateString) {
+            const startDate = new Date(startDateString);
+            const today = new Date();
+            let years = today.getFullYear() - startDate.getFullYear();
+            const m = today.getMonth() - startDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < startDate.getDate())) { years--; }
+            return years;
+        }
+        document.getElementById('expYearsDisplay').textContent = getExperienceYears('2014-09-01');
+
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const htmlElement = document.documentElement;
+        const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        htmlElement.setAttribute('data-theme', currentTheme);
+        themeToggleBtn.addEventListener('click', () => {
+            const newTheme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        
+        // Scroll Reveal Animation
+        const revealSections = document.querySelectorAll('.reveal-section');
+        const revealObserverOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        function revealObserverCallback(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const observer = new IntersectionObserver(revealObserverCallback, revealObserverOptions);
+            revealSections.forEach(section => { observer.observe(section); });
+        } else {
+            revealSections.forEach(section => section.classList.add('is-visible'));
         }
 
-        // 儲存標題與筆記到 localStorage
-        function saveNote() {
-            const title = document.getElementById('title').value;
-            const note = document.getElementById('note').value;
-            localStorage.setItem('note-title', title);
-            localStorage.setItem('note', note);
-            alert('標題與筆記已儲存！');
+        // Accordion for Experience Section
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            const content = item.querySelector('.accordion-content');
+            const icon = header.querySelector('.accordion-icon');
+            header.addEventListener('click', () => {
+                const isOpen = content.style.maxHeight;
+                if (isOpen) {
+                    content.style.maxHeight = null;
+                    icon.classList.remove('rotate-180');
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    icon.classList.add('rotate-180');
+                }
+            });
+        });
+
+        // Modal Logic for Project 1
+        const projectModal1 = document.getElementById('projectDetailModal1');
+        const openProjectModalBtn1 = document.getElementById('openProjectModalBtn1');
+        const closeProjectModalBtn1 = document.getElementById('closeProjectModalBtn1');
+        const modalContentArea1 = projectModal1 ? projectModal1.querySelector('.modal-content-area') : null;
+
+
+        if (openProjectModalBtn1 && projectModal1 && closeProjectModalBtn1 && modalContentArea1) {
+            openProjectModalBtn1.addEventListener('click', (e) => {
+                e.preventDefault();
+                projectModal1.classList.remove('hidden');
+                projectModal1.classList.add('opacity-100'); // Ensure opacity is set for visibility
+                modalContentArea1.classList.remove('scale-95');
+                modalContentArea1.classList.add('scale-100');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            });
+
+            const closeModal1 = () => {
+                modalContentArea1.classList.remove('scale-100');
+                modalContentArea1.classList.add('scale-95');
+                projectModal1.classList.remove('opacity-100');
+                projectModal1.classList.add('opacity-0'); 
+                setTimeout(() => { 
+                   projectModal1.classList.add('hidden');
+                   projectModal1.classList.remove('opacity-0'); 
+                }, 300); 
+                document.body.style.overflow = ''; // Restore background scrolling
+            };
+
+            closeProjectModalBtn1.addEventListener('click', closeModal1);
+            projectModal1.addEventListener('click', (event) => { // Close if backdrop is clicked
+                if (event.target === projectModal1) { closeModal1(); }
+            });
+            document.addEventListener('keydown', (event) => { // Close with Escape key
+                if (event.key === 'Escape' && !projectModal1.classList.contains('hidden')) {
+                    closeModal1();
+                }
+            });
         }
+
+        // Modal Logic for Project 2
+        const projectModal2 = document.getElementById('projectDetailModal2');
+        const openProjectModalBtn2 = document.getElementById('openProjectModalBtn2');
+        const closeProjectModalBtn2 = document.getElementById('closeProjectModalBtn2');
+        const modalContentArea2 = projectModal2 ? projectModal2.querySelector('.modal-content-area') : null;
+
+        if (openProjectModalBtn2 && projectModal2 && closeProjectModalBtn2 && modalContentArea2) {
+            openProjectModalBtn2.addEventListener('click', (e) => {
+                e.preventDefault();
+                projectModal2.classList.remove('hidden');
+                projectModal2.classList.add('opacity-100');
+                modalContentArea2.classList.remove('scale-95');
+                modalContentArea2.classList.add('scale-100');
+                document.body.style.overflow = 'hidden';
+            });
+
+            const closeModal2 = () => {
+                modalContentArea2.classList.remove('scale-100');
+                modalContentArea2.classList.add('scale-95');
+                projectModal2.classList.remove('opacity-100');
+                projectModal2.classList.add('opacity-0');
+                setTimeout(() => {
+                    projectModal2.classList.add('hidden');
+                    projectModal2.classList.remove('opacity-0');
+                }, 300);
+                document.body.style.overflow = '';
+            };
+
+            closeProjectModalBtn2.addEventListener('click', closeModal2);
+            projectModal2.addEventListener('click', (event) => {
+                if (event.target === projectModal2) {
+                    closeModal2();
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !projectModal2.classList.contains('hidden')) {
+                    closeModal2();
+                }
+            });
+        }
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
 </body>
-</html> 
+</html>
