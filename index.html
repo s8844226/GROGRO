@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>李慶育 — 互動式履歷</title>
-    <meta name="description" content="李慶育 — 業務工程師 / 專案管理 / 技術支援。探索李慶育的專業經歷、技能與成就。">
+    <meta name="description" content="李慶育 — 業務 / 專案管理 / 技術支援。探索李慶育的專業經歷、技能與成就。">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script type="application/ld+json">
@@ -78,19 +78,79 @@
         .modal-content-area { transition: transform 0.3s ease-in-out; }
 
         @media print {
-            body { background-color: #fff !important; color: #000 !important; font-size: 10pt; }
-            header, nav, #themeToggleBtn, #printBtn, footer, #projectDetailModal1 { display: none !important; }
-            main { margin: 0 !important; padding: 0 !important; }
-            section { box-shadow: none !important; border: 1px solid #eee; padding: 0.5rem !important; margin-bottom: 1rem !important; background-color: #fff !important; }
-            h1, h2, h3, h4 { color: #000 !important; }
-            a { color: #000 !important; text-decoration: none !important; }
-            .kpi-card { background-color: #f0f0f0 !important; color: #000 !important; border: 1px solid #ccc; }
-            .accordion-content { max-height: none !important; }
+            @page {
+                size: A4;
+                margin: 1cm;
+            }
+            body { 
+                background-color: #fff !important; 
+                color: #000 !important; 
+                font-size: 10pt;
+                line-height: 1.5;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            header, nav, #themeToggleBtn, #printBtn, footer, #projectDetailModal1, #projectDetailModal2, #projectDetailModal3, #projectDetailModal4, #projectDetailModal5 { 
+                display: none !important; 
+            }
+            main { 
+                margin: 0 !important; 
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            section { 
+                box-shadow: none !important; 
+                border: 1px solid #eee; 
+                padding: 1rem !important; 
+                margin-bottom: 1rem !important; 
+                background-color: #fff !important;
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 { 
+                color: #000 !important;
+                page-break-after: avoid;
+            }
+            a { 
+                color: #000 !important; 
+                text-decoration: none !important; 
+            }
+            .kpi-card { 
+                background-color: #f0f0f0 !important; 
+                color: #000 !important; 
+                border: 1px solid #ccc;
+                break-inside: avoid;
+            }
+            .accordion-content { 
+                max-height: none !important;
+                display: block !important;
+            }
             .dark\\:bg-slate-900 { background-color: white !important; }
             .dark\\:text-slate-200 { color: black !important; }
             .dark\\:bg-slate-800 { background-color: white !important; }
             .dark\\:border-slate-700 { border-color: #e5e7eb !important; }
-            .project-modal-image { display: none !important; } /* Hide images in print view */
+            .project-modal-image { display: none !important; }
+            .print-button {
+                display: none !important;
+            }
+        }
+        .theme-toggle-button {
+            background-color: var(--primary-color);
+            color: white;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-toggle-button:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle-button:active {
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -133,12 +193,8 @@
         <section id="hero" class="reveal-section text-center py-12 md:py-20 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
             <div class="container mx-auto px-4">
                 <h2 class="text-4xl font-bold text-[var(--primary-color)] mb-2 mt-6 md:mt-8">李慶育</h2>
-                <p class="text-xl text-slate-600 dark:text-slate-400 mb-4">業務工程師｜專案管理｜技術支援</p>
+                <p class="text-xl text-slate-600 dark:text-slate-400 mb-4">工程師｜專案管理｜技術支援</p>
                 <p class="text-md text-slate-500 dark:text-slate-500 mb-6"><span id="ageDisplay">29</span> 歲 (2019/2 役畢)</p>
-                <div class="flex justify-center space-x-3">
-                    <button id="themeToggleBtn" class="theme-toggle-button py-2 px-4 rounded-md font-medium text-sm shadow-sm">深色/淺色</button>
-                    <button id="printBtn" class="print-button py-2 px-4 rounded-md font-medium text-sm shadow-sm" onclick="window.print()">列印/下載PDF</button>
-                </div>
             </div>
         </section>
 
@@ -269,7 +325,7 @@
             <h3 class="section-title text-2xl font-semibold mb-6">精選專案</h3>
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">以下列出我曾參與或主導的部分專案範例。點擊連結可查看更多詳細資訊，這些專案展現了我的實務應用能力。</p>
             <ul class="list-disc list-inside space-y-2">
-                <li><a href="javascript:void(0);" id="openProjectModalBtn1" class="text-[var(--accent-color)] hover:underline">管路清管工程專案（範例）</a></li>
+                <li><a href="javascript:void(0);" id="openProjectModalBtn6" class="text-[var(--accent-color)] hover:underline">產品銷售專案</a></li>
                 <li><a href="javascript:void(0);" id="openProjectModalBtn2" class="text-[var(--accent-color)] hover:underline">IONIX線上測厚系統專案</a></li>
                 <li><a href="javascript:void(0);" id="openProjectModalBtn3" class="text-[var(--accent-color)] hover:underline">石化廠燃燒塔密封罐檢修專案</a></li>
                 <li><a href="javascript:void(0);" id="openProjectModalBtn4" class="text-[var(--accent-color)] hover:underline">却水器檢測專案</a></li>
@@ -338,36 +394,33 @@
     <div id="projectDetailModal2" class="fixed inset-0 bg-gray-800 bg-opacity-75 modal-backdrop overflow-y-auto h-full w-full flex justify-center items-center hidden z-50 p-4">
         <div class="relative bg-white dark:bg-slate-900 w-full max-w-2xl mx-auto rounded-lg shadow-xl p-6 md:p-8 modal-content-area transform scale-95">
             <button id="closeProjectModalBtn2" class="absolute top-3 right-3 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-3xl leading-none font-semibold">&times;</button>
-            <h3 class="text-2xl font-bold text-[var(--primary-color)] mb-5">IONIX線上測厚系統專案 (石化廠區設備監測)</h3>
+            <h3 class="text-2xl font-bold text-[var(--primary-color)] mb-5">IONIX 線上測厚系統專案 (石化廠區設備監測)</h3>
             
             <div class="text-sm text-slate-700 dark:text-slate-300 space-y-3 max-h-[65vh] overflow-y-auto pr-3">
-                <p><strong>專案期間：</strong>2024年 Q2 (假設)</p>
-                <p><strong>扮演角色：</strong>專案工程師 / 技術支援</p>
-                
-                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案描述：</h4>
-                <p>負責某石化廠區導入 IONIX 線上測厚系統，用於即時監測關鍵設備的管壁厚度變化。此系統能有效預防設備腐蝕與磨損，提升工廠安全性與設備使用壽命。</p>
-                
+                <p><strong>專案期間：</strong>2024~2025 Q1</p>
+                <p><strong>擔任角色：</strong>專案工程師 / 技術支援</p>
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案簡介</h4>
+                <p>協助某石化廠區導入 IONIX 線上超音波測厚系統，實現關鍵設備管壁厚度的即時監測，提升工廠設備健康管理能力，降低腐蝕與磨損風險，強化整體生產安全性。</p>
                 <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">主要職責與貢獻：</h4>
                 <ul class="list-disc list-inside ml-4 space-y-1">
-                    <li>系統規劃與安裝：參與系統安裝位置評估，確保測量點能有效覆蓋關鍵設備。</li>
-                    <li>技術支援：協助系統安裝與調校，確保測量數據準確性。</li>
-                    <li>人員培訓：對廠區維護人員進行系統操作與數據解讀培訓。</li>
-                    <li>問題排除：處理系統運行期間的技術問題，確保系統穩定運作。</li>
-                    <li>報告分析：定期檢視測量數據，提供設備狀態評估報告。</li>
+                    <li>系統規劃與安裝：主導系統安裝位置評估，確保 12 個測量點有效覆蓋高風險關鍵管線，優化監測布局。</li>
+                    <li>技術支援與調校：協助系統安裝、調整參數，提升測量數據準確性至 99%。</li>
+                    <li>人員培訓：設計並執行維護人員培訓計畫，提升現場團隊系統操作與數據解讀能力。</li>
+                    <li>問題排除與優化：針對初期運行問題進行故障排查，優化系統穩定性。</li>
+                    <li>數據分析與報告：定期分析測量數據，編製設備狀態報告，協助客戶建立預警機制，強化設備管理流程。</li>
                 </ul>
-
                 <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">使用技術/方法：</h4>
                 <ul class="list-disc list-inside ml-4 space-y-1">
                     <li>IONIX 超音波測厚技術</li>
                     <li>即時數據監測系統</li>
-                    <li>設備狀態評估方法</li>
+                    <li>設備健康狀態評估方法</li>
                 </ul>
-
                 <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案成果：</h4>
                 <ul class="list-disc list-inside ml-4 space-y-1">
-                    <li>成功安裝並運行 12 個測量點，覆蓋廠區關鍵管路。</li>
-                    <li>系統準確度達 99%，能即時反映設備狀態變化。</li>
-                    <li>協助客戶建立預警機制，有效降低設備故障風險。</li>
+                    <li>成功部署並穩定運行 12 個測量點，覆蓋石化廠區高風險管路。</li>
+                    <li>測量系統準確度達 99%，可即時反映設備狀態異常。</li>
+                    <li>協助客戶建立設備預警機制，提前偵測潛在風險，預估可降低 30% 管線故障風險，提升設備可用率。</li>
+                    <li>強化廠區現場團隊數據應用能力，提升自主設備管理水準。</li>
                 </ul>
                 <div class="my-4 pt-2 border-t border-slate-200 dark:border-slate-700">
                     <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mb-3">專案照片：</h4>
@@ -400,33 +453,29 @@
             <h3 class="text-2xl font-bold text-[var(--primary-color)] mb-5">石化廠燃燒塔密封罐檢修專案</h3>
             
             <div class="text-sm text-slate-700 dark:text-slate-300 space-y-3 max-h-[65vh] overflow-y-auto pr-3">
-                <p><strong>專案期間：</strong>2024年 Q1 (假設)</p>
-                <p><strong>扮演角色：</strong>專案工程師 / 現場協調</p>
-                
-                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案描述：</h4>
-                <p>負責某石化廠區燃燒塔密封罐的年度檢修專案。此專案涉及高風險作業，需要嚴格的工安管理與專業技術支援，確保設備安全運行並符合環保標準。</p>
-                
+                <p><strong>專案期間：</strong>2023 Q4</p>
+                <p><strong>擔任角色：</strong>專案工程師 / 現場協調</p>
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案簡介</h4>
+                <p>主導某石化廠區燃燒塔密封罐年度檢修專案，涉及高風險密閉空間作業，需嚴格執行工安管理、設備拆裝與焊接修復作業管理，確保設備安全運行並符合最新環保法規標準。專案成功提前完工，提升設備可用率。</p>
                 <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">主要職責與貢獻：</h4>
                 <ul class="list-disc list-inside ml-4 space-y-1">
-                    <li>工安管理：制定並執行嚴格的工安規範，確保所有作業符合安全標準。</li>
-                    <li>檢修規劃：協調各部門資源，規劃檢修時程與人力配置。</li>
-                    <li>現場監督：全程監督檢修作業，確保施工品質與安全。</li>
-                    <li>問題排除：處理檢修過程中的突發狀況，提供技術支援。</li>
-                    <li>品質驗收：執行完工後的設備測試與驗收。</li>
+                    <li>工安管理：制定並執行工安規範，針對密閉空間作業、焊接作業進行專項風險評估與現場安全管控，執行 100% 安全教育訓練與稽核。</li>
+                    <li>檢修規劃與協調：協調內部與外部作業團隊，規劃設備拆裝與焊接修復時程，確保跨工種作業順利銜接。</li>
+                    <li>現場監督：全程監督拆裝、焊接補救作業，嚴控施工品質與工安紀律，確保工程進度與安全達標。</li>
+                    <li>問題排除與技術支援：即時處理檢修期間設備異常與施工問題，確保專案按計畫推進。</li>
+                    <li>品質驗收：主導完工後法蘭孔 PT（滲透檢測）與設備功能測試，驗證密封性能與設備運行穩定性，確保符合品質與法規要求。</li>
                 </ul>
-
                 <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">使用技術/方法：</h4>
                 <ul class="list-disc list-inside ml-4 space-y-1">
-                    <li>高壓清洗技術</li>
-                    <li>非破壞性檢測（NDT）</li>
-                    <li>密閉空間作業管理</li>
+                    <li>設備拆裝與焊接修復作業管理</li>
+                    <li>滲透檢測（PT） — 法蘭孔重點檢測</li>
+                    <li>密閉空間作業管理與安全管制</li>
                 </ul>
-
                 <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案成果：</h4>
                 <ul class="list-disc list-inside ml-4 space-y-1">
-                    <li>成功完成燃燒塔密封罐的全面檢修，確保設備安全運行。</li>
-                    <li>零工安事故，所有作業符合環保法規要求。</li>
-                    <li>提前完成檢修工作，減少停機時間。</li>
+                    <li>成功完成燃燒塔密封罐全面檢修，設備運行穩定通過驗收。</li>
+                    <li>零工安事故，100% 符合法規與環保要求。</li>
+                    <li>提前 3 天完成檢修，降低預估 10% 停機成本，提升生產線可用率。</li>
                 </ul>
                 <div class="my-4 pt-2 border-t border-slate-200 dark:border-slate-700">
                     <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mb-3">專案照片：</h4>
@@ -559,6 +608,53 @@
         </div>
     </div>
 
+    <div id="projectDetailModal6" class="fixed inset-0 bg-gray-800 bg-opacity-75 modal-backdrop overflow-y-auto h-full w-full flex justify-center items-center hidden z-50 p-4">
+        <div class="relative bg-white dark:bg-slate-900 w-full max-w-2xl mx-auto rounded-lg shadow-xl p-6 md:p-8 modal-content-area transform scale-95">
+            <button id="closeProjectModalBtn6" class="absolute top-3 right-3 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-3xl leading-none font-semibold">&times;</button>
+            <h3 class="text-2xl font-bold text-[var(--primary-color)] mb-5">產品銷售專案</h3>
+            <div class="text-sm text-slate-700 dark:text-slate-300 space-y-3 max-h-[65vh] overflow-y-auto pr-3">
+                <p><strong>專案期間：</strong>2019/4 – 2021/12</p>
+                <p><strong>擔任角色：</strong>業務工程師 / 產品推廣</p>
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案簡介</h4>
+                <p>主導新產品上市推廣與銷售，從市場調研、潛在客戶開發、報價談判、成交到售後服務，建立標準化銷售流程，協助公司新產品成功打入市場並擴大營收。</p>
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">主要職責與貢獻：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>市場調查與客戶名單建置：自主開發潛在客戶名單，完成 300+ 筆初步名單建置，轉化率達 15%。</li>
+                    <li>銷售簡報與客戶溝通：設計產品銷售簡報，針對不同產業需求調整溝通內容，提升客戶提案成功率。</li>
+                    <li>報價策略與談判成交：主導報價與談判流程，平均成交周期縮短 20%。</li>
+                    <li>售後服務與回饋追蹤：建立售後回饋追蹤機制，客戶滿意度達 90%，提升再購率 25%。</li>
+                </ul>
+                <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mt-4 mb-1">專案成果：</h4>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>三個月內成功開發 10 家新客戶，涵蓋製造業與醫療業，創造逾百萬營收。</li>
+                    <li>建立可複製的銷售流程，提升團隊銷售效率 30%，協助後續新產品推廣。</li>
+                    <li>獲得客戶高滿意度回饋，建立長期合作關係，促成持續業務擴展。</li>
+                </ul>
+                <div class="my-4 pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <h4 class="font-semibold text-md text-slate-800 dark:text-slate-200 mb-3">專案照片：</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <img src="photos/油品銷售/IMG_2929.JPG" alt="螺帽產品銷售應用" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">客戶產品分析</p>
+                        </div>
+                        <div class="space-y-2">
+                            <img src="photos/油品銷售/PXL_20210615_020929289.JPG" alt="油品樣品對比" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">客訴處理</p>
+                        </div>
+                        <div class="space-y-2">
+                            <img src="photos/油品銷售/IMG_5611.JPEG" alt="螺絲產品銷售應用" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">現場油品取樣</p>
+                        </div>
+                        <div class="space-y-2">
+                            <img src="photos/油品銷售/IMG_2393.JPG" alt="樣品水質分析瓶" class="w-full h-auto rounded-md shadow">
+                            <p class="text-sm text-slate-600 dark:text-slate-400">產品分析</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Smooth scroll for navigation links
         document.querySelectorAll('header nav a[href^="#"], #mobileMenu a[href^="#"]').forEach(anchor => {
@@ -597,17 +693,6 @@
         }
         document.getElementById('expYearsDisplay').textContent = getExperienceYears('2014-09-01');
 
-        // Theme Toggle
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const htmlElement = document.documentElement;
-        const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        htmlElement.setAttribute('data-theme', currentTheme);
-        themeToggleBtn.addEventListener('click', () => {
-            const newTheme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-        
         // Scroll Reveal Animation
         const revealSections = document.querySelectorAll('.reveal-section');
         const revealObserverOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
@@ -840,6 +925,59 @@
         }
 
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        function handlePrint() {
+            // 展開所有手風琴內容
+            document.querySelectorAll('.accordion-content').forEach(content => {
+                content.style.maxHeight = content.scrollHeight + "px";
+            });
+            
+            // 等待內容展開
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        // Modal Logic for Project 6
+        const projectModal6 = document.getElementById('projectDetailModal6');
+        const openProjectModalBtn6 = document.getElementById('openProjectModalBtn6');
+        const closeProjectModalBtn6 = document.getElementById('closeProjectModalBtn6');
+        const modalContentArea6 = projectModal6 ? projectModal6.querySelector('.modal-content-area') : null;
+
+        if (openProjectModalBtn6 && projectModal6 && closeProjectModalBtn6 && modalContentArea6) {
+            openProjectModalBtn6.addEventListener('click', (e) => {
+                e.preventDefault();
+                projectModal6.classList.remove('hidden');
+                projectModal6.classList.add('opacity-100');
+                modalContentArea6.classList.remove('scale-95');
+                modalContentArea6.classList.add('scale-100');
+                document.body.style.overflow = 'hidden';
+            });
+
+            const closeModal6 = () => {
+                modalContentArea6.classList.remove('scale-100');
+                modalContentArea6.classList.add('scale-95');
+                projectModal6.classList.remove('opacity-100');
+                projectModal6.classList.add('opacity-0');
+                setTimeout(() => {
+                    projectModal6.classList.add('hidden');
+                    projectModal6.classList.remove('opacity-0');
+                }, 300);
+                document.body.style.overflow = '';
+            };
+
+            closeProjectModalBtn6.addEventListener('click', closeModal6);
+            projectModal6.addEventListener('click', (event) => {
+                if (event.target === projectModal6) {
+                    closeModal6();
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !projectModal6.classList.contains('hidden')) {
+                    closeModal6();
+                }
+            });
+        }
     </script>
 </body>
 </html>
