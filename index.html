@@ -168,13 +168,6 @@
                         <a href="#education" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">學歷與證照</a>
                         <a href="#projects" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">專案</a>
                         <a href="#contact" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)]">聯絡</a>
-                        <button id="themeToggleBtn" class="theme-toggle-button px-3 py-2 rounded-md text-sm font-medium">
-                            <span class="light-icon">🌙</span>
-                            <span class="dark-icon hidden">☀️</span>
-                        </button>
-                        <button id="printBtn" class="print-button px-3 py-2 rounded-md text-sm font-medium">
-                            列印
-                        </button>
                     </div>
                 </nav>
                 <div class="md:hidden">
@@ -225,13 +218,11 @@
         <section id="skills" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
             <h3 class="section-title text-2xl font-semibold mb-6">專業技能</h3>
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">此處列出我的核心專業技能，涵蓋業務開發、專案管理及技術實務操作能力，這些技能是我在不同職位上持續創造價值的基礎。</p>
-            <!-- 技能區塊 badge 標籤化 -->
             <ul class="list-disc list-inside space-y-2 text-slate-700 dark:text-slate-300">
                 <li><strong class="font-medium">業務開發：</strong>扎實的客戶開發與維護經驗，推升公司營收。</li>
                 <li><strong class="font-medium">專案管理：</strong>跨部門協調、流程優化與問題解決。</li>
                 <li><strong class="font-medium">技術支援與現場作業：</strong>能快速投入現場實務，參與管路清管、熱交換器維修、IP 檢測、IONIX 線上測厚等。</li>
             </ul>
-            <!-- 原本的技能 ul 移除 -->
         </section>
 
         <section id="experience" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
@@ -333,30 +324,13 @@
         <section id="projects" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
             <h3 class="section-title text-2xl font-semibold mb-6">精選專案</h3>
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">以下列出我曾參與或主導的部分專案範例。點擊連結可查看更多詳細資訊，這些專案展現了我的實務應用能力。</p>
-            <!-- 專案列表卡片化 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="cursor-pointer bg-blue-100 dark:bg-blue-900 rounded-lg shadow p-4 hover:shadow-lg transition" data-modal="projectDetailModal6">
-                <h4 class="font-bold text-lg mb-1 text-blue-700 dark:text-blue-300">產品銷售專案</h4>
-                <p class="text-sm text-blue-800 dark:text-blue-200">新產品上市推廣與銷售，三個月開發10家新客戶...</p>
-              </div>
-              <div class="cursor-pointer bg-blue-100 dark:bg-blue-900 rounded-lg shadow p-4 hover:shadow-lg transition" data-modal="projectDetailModal2">
-                <h4 class="font-bold text-lg mb-1 text-blue-700 dark:text-blue-300">IONIX線上測厚系統專案</h4>
-                <p class="text-sm text-blue-800 dark:text-blue-200">導入超音波測厚系統，提升設備健康管理...</p>
-              </div>
-              <div class="cursor-pointer bg-blue-100 dark:bg-blue-900 rounded-lg shadow p-4 hover:shadow-lg transition" data-modal="projectDetailModal3">
-                <h4 class="font-bold text-lg mb-1 text-blue-700 dark:text-blue-300">石化廠燃燒塔密封罐檢修專案</h4>
-                <p class="text-sm text-blue-800 dark:text-blue-200">高風險密閉空間作業，提前完工提升可用率...</p>
-              </div>
-              <div class="cursor-pointer bg-blue-100 dark:bg-blue-900 rounded-lg shadow p-4 hover:shadow-lg transition" data-modal="projectDetailModal4">
-                <h4 class="font-bold text-lg mb-1 text-blue-700 dark:text-blue-300">却水器檢測專案</h4>
-                <p class="text-sm text-blue-800 dark:text-blue-200">超音波聲學分析、紅外線測溫，提升維護效能...</p>
-              </div>
-              <div class="cursor-pointer bg-blue-100 dark:bg-blue-900 rounded-lg shadow p-4 hover:shadow-lg transition" data-modal="projectDetailModal5">
-                <h4 class="font-bold text-lg mb-1 text-blue-700 dark:text-blue-300">ISOMAG 磁力式油封客戶改善案</h4>
-                <p class="text-sm text-blue-800 dark:text-blue-200">導入磁力式油封，提升設備穩定性與降低成本...</p>
-              </div>
-            </div>
-            <!-- 原本的專案 ul 移除 -->
+            <ul class="list-disc list-inside space-y-2">
+                <li><a href="javascript:void(0);" id="openProjectModalBtn6" class="text-[var(--accent-color)] hover:underline">產品銷售專案</a></li>
+                <li><a href="javascript:void(0);" id="openProjectModalBtn2" class="text-[var(--accent-color)] hover:underline">IONIX線上測厚系統專案</a></li>
+                <li><a href="javascript:void(0);" id="openProjectModalBtn3" class="text-[var(--accent-color)] hover:underline">石化廠燃燒塔密封罐檢修專案</a></li>
+                <li><a href="javascript:void(0);" id="openProjectModalBtn4" class="text-[var(--accent-color)] hover:underline">却水器檢測專案</a></li>
+                <li><a href="javascript:void(0);" id="openProjectModalBtn5" class="text-[var(--accent-color)] hover:underline">ISOMAG 磁力式油封客戶改善案</a></li>
+            </ul>
         </section>
 
         <section id="contact" class="reveal-section mt-12 p-6 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
@@ -1005,202 +979,6 @@
                 }
             });
         }
-
-        // 主題切換功能
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const lightIcon = themeToggleBtn.querySelector('.light-icon');
-        const darkIcon = themeToggleBtn.querySelector('.dark-icon');
-
-        // 檢查本地儲存的主題設定
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            lightIcon.classList.add('hidden');
-            darkIcon.classList.remove('hidden');
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            if (currentTheme === 'dark') {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
-            }
-        });
-
-        // 列印功能
-        const printBtn = document.getElementById('printBtn');
-        printBtn.addEventListener('click', handlePrint);
-
-        // 年齡自動計算
-        const birthYear = 1994; // 請根據實際出生年份修改
-        const ageDisplay = document.getElementById('ageDisplay');
-        const currentYear = new Date().getFullYear();
-        const age = currentYear - birthYear;
-        ageDisplay.textContent = age;
-
-        // 工作經驗年數計算
-        const startYear = 2014; // 請根據實際開始工作年份修改
-        const expYearsDisplay = document.getElementById('expYearsDisplay');
-        const expYears = currentYear - startYear;
-        expYearsDisplay.textContent = expYears;
-
-        // 通用專案彈窗函數
-        function createProjectModal(modalId, openBtnId, closeBtnId) {
-            const modal = document.getElementById(modalId);
-            const openBtn = document.getElementById(openBtnId);
-            const closeBtn = document.getElementById(closeBtnId);
-            const modalContent = modal ? modal.querySelector('.modal-content-area') : null;
-
-            if (openBtn && modal && closeBtn && modalContent) {
-                openBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    modal.classList.remove('hidden');
-                    modal.classList.add('opacity-100');
-                    modalContent.classList.remove('scale-95');
-                    modalContent.classList.add('scale-100');
-                    document.body.style.overflow = 'hidden';
-                });
-
-                const closeModal = () => {
-                    modalContent.classList.remove('scale-100');
-                    modalContent.classList.add('scale-95');
-                    modal.classList.remove('opacity-100');
-                    modal.classList.add('opacity-0');
-                    setTimeout(() => {
-                        modal.classList.add('hidden');
-                        modal.classList.remove('opacity-0');
-                    }, 300);
-                    document.body.style.overflow = '';
-                };
-
-                closeBtn.addEventListener('click', closeModal);
-                modal.addEventListener('click', (event) => {
-                    if (event.target === modal) {
-                        closeModal();
-                    }
-                });
-                document.addEventListener('keydown', (event) => {
-                    if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
-                        closeModal();
-                    }
-                });
-            }
-        }
-
-        // 初始化所有專案彈窗
-        for (let i = 1; i <= 6; i++) {
-            createProjectModal(
-                `projectDetailModal${i}`,
-                `openProjectModalBtn${i}`,
-                `closeProjectModalBtn${i}`
-            );
-        }
-
-        // 手風琴功能
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const content = header.nextElementSibling;
-                const icon = header.querySelector('.accordion-icon');
-                
-                if (content.style.maxHeight) {
-                    content.style.maxHeight = null;
-                    icon.style.transform = 'rotate(0deg)';
-                } else {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                    icon.style.transform = 'rotate(180deg)';
-                }
-            });
-        });
-
-        // 滾動動畫
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.reveal-section').forEach(section => {
-            observer.observe(section);
-        });
-
-        // 更新年份
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        // 專案卡片點擊開啟對應 modal（放在所有 modal JS 之後）
-        document.querySelectorAll('[data-modal]').forEach(card => {
-          card.addEventListener('click', function() {
-            const modalId = this.getAttribute('data-modal');
-            const modal = document.getElementById(modalId);
-            if (modal) {
-              modal.classList.remove('hidden');
-              modal.classList.add('opacity-100');
-              const modalContent = modal.querySelector('.modal-content-area');
-              if (modalContent) {
-                modalContent.classList.remove('scale-95');
-                modalContent.classList.add('scale-100');
-              }
-              document.body.style.overflow = 'hidden';
-            }
-          });
-        });
-
-        // 統一監聽所有 modal 的關閉按鈕（叉叉）
-        document.querySelectorAll('[id^="closeProjectModalBtn"]').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const modal = this.closest('.modal-backdrop');
-            if (modal) {
-              const modalContent = modal.querySelector('.modal-content-area');
-              if (modalContent) {
-                modalContent.classList.remove('scale-100');
-                modalContent.classList.add('scale-95');
-              }
-              modal.classList.remove('opacity-100');
-              modal.classList.add('opacity-0');
-              setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('opacity-0');
-              }, 300);
-              document.body.style.overflow = '';
-            }
-          });
-        });
-
-        // 點擊 modal 背景（非內容區）也能關閉
-        // 只針對 backdrop 本身觸發
-
-        document.querySelectorAll('.modal-backdrop').forEach(modal => {
-          modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-              const modalContent = modal.querySelector('.modal-content-area');
-              if (modalContent) {
-                modalContent.classList.remove('scale-100');
-                modalContent.classList.add('scale-95');
-              }
-              modal.classList.remove('opacity-100');
-              modal.classList.add('opacity-0');
-              setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('opacity-0');
-              }, 300);
-              document.body.style.overflow = '';
-            }
-          });
-        });
     </script>
 </body>
 </html>
